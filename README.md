@@ -68,7 +68,7 @@ ChromePlugin/
 
 ## API Usage
 
-This extension uses the HuggingFace Inference API with the `microsoft/DialoGPT-large` model. The free tier includes:
+This extension uses the HuggingFace Inference API with multiple models including `Qwen/Qwen3-235B-A22B`. The free tier includes:
 - 1,000 requests per month
 - Rate limits apply
 - No credit card required

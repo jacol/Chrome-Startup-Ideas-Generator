@@ -182,10 +182,37 @@
       border: 1px solid rgba(255, 255, 255, 0.3);
       backdrop-filter: blur(10px);
     }
-    
-    .clear-btn:hover {
+      .clear-btn:hover {
       background: rgba(255, 255, 255, 0.25);
       transform: translateY(-1px);
+    }
+    
+    .copy-result-btn {
+      background: rgba(255, 255, 255, 0.15);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    
+    .copy-result-btn:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.25);
+      transform: translateY(-1px);
+    }
+    
+    .copy-result-btn:disabled {
+      background: #cccccc;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+    
+    .copy-result-btn.copied {
+      background: rgba(40, 167, 69, 0.3);
+      border-color: rgba(40, 167, 69, 0.5);
     }
     
     .status {
@@ -240,14 +267,12 @@
       backdrop-filter: blur(10px);
       animation: slideUp 0.3s ease;
     }
-    
-    .result-header {
+      .result-header {
       margin-bottom: 12px;
       font-weight: 600;
       opacity: 0.9;
       font-size: 14px;
-      display: flex;
-      align-items: center;
+      display: flex;      align-items: center;
     }
     
     .result-content {
@@ -350,7 +375,7 @@
           <option value="meta-llama/Llama-3.1-8B-Instruct">Llama 3.1 8B Instruct (Default)</option>
           <option value="meta-llama/Llama-3.2-3B-Instruct">Llama 3.2 3B Instruct (Faster)</option>
           <option value="mistralai/Mistral-7B-Instruct-v0.3">Mistral 7B Instruct v0.3</option>
-          <option value="microsoft/DialoGPT-large">DialoGPT Large (Creative)</option>
+          <option value="Qwen/Qwen3-235B-A22B">Qwen3 235B (High Performance)</option>
           <option value="HuggingFaceH4/zephyr-7b-beta">Zephyr 7B Beta (Balanced)</option>
           <option value="microsoft/Phi-3-mini-4k-instruct">Phi-3 Mini 4K Instruct (Efficient)</option>
         </select>
@@ -364,11 +389,17 @@
       <button id="generateBtn" class="generate-btn">Generate Ideas</button>
       <button id="clearBtn" class="clear-btn">Clear</button>
     </div>
-    
-    <div id="status" class="status hidden"></div>
+      <div id="status" class="status hidden"></div>
     <div id="result" class="result hidden">
       <div class="result-header"></div>
       <div class="result-content"></div>
+    </div>
+    
+    <div id="copyButtonContainer" class="button-group hidden" style="margin-top: 12px;">
+      <button id="copyBtn" class="copy-result-btn">
+        <span class="copy-icon">📋</span>
+        Copy Ideas
+      </button>
     </div>
   </div>
   

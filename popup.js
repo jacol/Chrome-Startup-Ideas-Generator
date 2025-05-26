@@ -1,13 +1,16 @@
 // Popup script
-document.addEventListener('DOMContentLoaded', function() {
-  const apiKeyInput = document.getElementById('apiKey');
+document.addEventListener('DOMContentLoaded', function() {  const apiKeyInput = document.getElementById('apiKey');
   const modelSelect = document.getElementById('modelSelect');
   const generateBtn = document.getElementById('generateBtn');
   const clearBtn = document.getElementById('clearBtn');
+  const copyBtn = document.getElementById('copyBtn');
+  const copyButtonContainer = document.getElementById('copyButtonContainer');
   const statusDiv = document.getElementById('status');
   const resultDiv = document.getElementById('result');
   const resultHeaderDiv = document.querySelector('.result-header');
   const resultContentDiv = document.querySelector('.result-content');
+  
+  let currentGeneratedText = '';
   // Load saved API key and model
   chrome.storage.sync.get(['huggingfaceApiKey', 'selectedModel'], function(result) {
     if (result.huggingfaceApiKey) {
@@ -134,7 +137,6 @@ document.addEventListener('DOMContentLoaded', function() {
       generateBtn.textContent = 'Generate Ideas';
     }
   });
-
   // Clear button click handler
   clearBtn.addEventListener('click', function() {
     hideStatus();
@@ -149,16 +151,73 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function hideStatus() {
     statusDiv.classList.add('hidden');
-  }
-  function showResult(text, source) {
+  }  function showResult(text, source) {
     const sourceText = source === 'selected' ? 'selected text' : 'page content';
     resultHeaderDiv.innerHTML = `💡 Ideas based on ${sourceText}:`;
     resultContentDiv.textContent = text;
     resultDiv.classList.remove('hidden');
-  }
-  function hideResult() {
+    
+    // Store the generated text and show copy button
+    currentGeneratedText = text;
+    copyButtonContainer.classList.remove('hidden');
+  }  function hideResult() {
     resultDiv.classList.add('hidden');
+    copyButtonContainer.classList.add('hidden');
     resultHeaderDiv.innerHTML = '';
     resultContentDiv.textContent = '';
+    currentGeneratedText = '';
   }
+  
+  // Copy button click handler
+  copyBtn.addEventListener('click', async function() {
+    if (!currentGeneratedText) return;
+    
+    const copyIcon = copyBtn.querySelector('.copy-icon');
+    const originalText = copyBtn.innerHTML;
+    
+    try {
+      await navigator.clipboard.writeText(currentGeneratedText);
+      
+      // Show success feedback
+      copyIcon.textContent = '✅';
+      copyBtn.classList.add('copied');
+      
+      // Reset after 2 seconds
+      setTimeout(() => {
+        copyIcon.textContent = '📋';
+        copyBtn.classList.remove('copied');
+      }, 2000);
+      
+    } catch (error) {
+      console.error('Failed to copy text:', error);
+      
+      // Fallback for older browsers
+      try {
+        const textArea = document.createElement('textarea');
+        textArea.value = currentGeneratedText;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        
+        // Show success feedback
+        copyIcon.textContent = '✅';
+        copyBtn.classList.add('copied');
+        
+        setTimeout(() => {
+          copyIcon.textContent = '📋';
+          copyBtn.classList.remove('copied');
+        }, 2000);
+        
+      } catch (fallbackError) {
+        // Show error feedback
+        copyIcon.textContent = '❌';
+        copyBtn.innerHTML = '<span class="copy-icon">❌</span> Failed';
+        
+        setTimeout(() => {
+          copyBtn.innerHTML = originalText;
+        }, 2000);
+      }
+    }
+  });
 });
