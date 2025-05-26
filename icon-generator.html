@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Icon Generator</title>
+</head>
+<body>
+    <canvas id="canvas16" width="16" height="16"></canvas>
+    <canvas id="canvas48" width="48" height="48"></canvas>
+    <canvas id="canvas128" width="128" height="128"></canvas>
+
+    <script>
+        function createIcon(size, canvasId) {
+            const canvas = document.getElementById(canvasId);
+            const ctx = canvas.getContext('2d');
+            
+            // Create gradient background
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#667eea');
+            gradient.addColorStop(1, '#764ba2');
+            
+            // Draw rounded rectangle background
+            const radius = size * 0.15;
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.roundRect(0, 0, size, size, radius);
+            ctx.fill();
+            
+            // Draw rocket icon
+            ctx.fillStyle = 'white';
+            const centerX = size / 2;
+            const centerY = size / 2;
+            const rocketSize = size * 0.4;
+            
+            // Rocket body (triangle pointing up)
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY - rocketSize/2);
+            ctx.lineTo(centerX - rocketSize/3, centerY + rocketSize/2);
+            ctx.lineTo(centerX + rocketSize/3, centerY + rocketSize/2);
+            ctx.closePath();
+            ctx.fill();
+            
+            // Rocket fins
+            ctx.beginPath();
+            ctx.moveTo(centerX - rocketSize/3, centerY + rocketSize/3);
+            ctx.lineTo(centerX - rocketSize/2, centerY + rocketSize/2);
+            ctx.lineTo(centerX - rocketSize/4, centerY + rocketSize/2);
+            ctx.closePath();
+            ctx.fill();
+            
+            ctx.beginPath();
+            ctx.moveTo(centerX + rocketSize/3, centerY + rocketSize/3);
+            ctx.lineTo(centerX + rocketSize/2, centerY + rocketSize/2);
+            ctx.lineTo(centerX + rocketSize/4, centerY + rocketSize/2);
+            ctx.closePath();
+            ctx.fill();
+            
+            // Spark/star
+            ctx.fillStyle = '#FFD700';
+            const sparkX = centerX + rocketSize/2;
+            const sparkY = centerY - rocketSize/3;
+            const sparkSize = size * 0.08;
+            
+            ctx.beginPath();
+            ctx.arc(sparkX, sparkY, sparkSize, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            return canvas.toDataURL('image/png');
+        }
+
+        // Generate all icons
+        const icon16 = createIcon(16, 'canvas16');
+        const icon48 = createIcon(48, 'canvas48');
+        const icon128 = createIcon(128, 'canvas128');
+        
+        // Create download links
+        function createDownloadLink(dataUrl, filename) {
+            const link = document.createElement('a');
+            link.download = filename;
+            link.href = dataUrl;
+            link.textContent = `Download ${filename}`;
+            link.style.display = 'block';
+            link.style.margin = '10px 0';
+            document.body.appendChild(link);
+        }
+        
+        createDownloadLink(icon16, 'icon16.png');
+        createDownloadLink(icon48, 'icon48.png');
+        createDownloadLink(icon128, 'icon128.png');
+    </script>
+</body>
+</html>
