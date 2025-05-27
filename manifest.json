@@ -1,8 +1,7 @@
-{
-  "manifest_version": 3,
+{  "manifest_version": 3,
   "name": "Startup Idea Generator",
-  "version": "1.0.0",
-  "description": "Generate innovative technology startup ideas from any webpage content using advanced AI models from HuggingFace. Transform text into business opportunities instantly.",
+  "version": "2.1.2",
+  "description": "Generate innovative startup ideas from webpage content using AI models from HuggingFace. Transform text into opportunities.",
   "permissions": [
     "activeTab",
     "storage",
