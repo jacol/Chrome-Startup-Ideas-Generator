@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Screenshot Generator - Startup Idea Generator</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 40px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .hero-section {
+            text-align: center;
+            color: white;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .hero-subtitle {
+            font-size: 1.5rem;
+            opacity: 0.9;
+            margin-bottom: 3rem;
+        }
+        
+        .extension-mockup {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 40px auto;
+            max-width: 420px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .extension-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        
+        .extension-logo {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 12px;
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        
+        .extension-title {
+            font-size: 22px;
+            font-weight: 600;
+            margin: 0;
+            color: white;
+        }
+        
+        .extension-subtitle {
+            font-size: 13px;
+            opacity: 0.8;
+            margin-top: 4px;
+            color: white;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 14px;
+            color: white;
+            opacity: 0.9;
+        }
+        
+        .form-input, .form-select {
+            width: 100%;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 14px;
+            box-sizing: border-box;
+            background: rgba(255, 255, 255, 0.95);
+            color: #333;
+        }
+        
+        .form-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 16px;
+            padding-right: 40px;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 60px 0;
+        }
+        
+        .feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+        
+        .feature-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: white;
+        }
+        
+        .feature-description {
+            opacity: 0.8;
+            line-height: 1.6;
+            color: white;
+        }
+        
+        .models-showcase {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 40px 0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .models-title {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 30px;
+            color: white;
+        }
+        
+        .models-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .model-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .model-name {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: white;
+        }
+        
+        .model-description {
+            font-size: 14px;
+            opacity: 0.8;
+            color: white;
+        }
+        
+        .result-mockup {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .result-header {
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: white;
+        }
+        
+        .result-content {
+            font-size: 13px;
+            line-height: 1.6;
+            opacity: 0.9;
+            color: white;
+            white-space: pre-line;
+        }
+        
+        .instructions {
+            text-align: center;
+            margin-top: 60px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .instructions h3 {
+            color: #FFD700;
+            margin-bottom: 20px;
+        }
+        
+        .instructions p {
+            color: white;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="hero-section">
+        <h1 class="hero-title">🚀 Startup Idea Generator</h1>
+        <p class="hero-subtitle">Transform any webpage into innovative business opportunities with AI</p>
+        
+        <!-- Extension Mockup -->
+        <div class="extension-mockup">
+            <div class="extension-header">
+                <div class="extension-logo">🚀</div>
+                <h2 class="extension-title">Startup Ideas</h2>
+                <div class="extension-subtitle">AI-powered idea generation</div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">HuggingFace API Key</label>
+                <input type="password" class="form-input" placeholder="hf_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" value="••••••••••••••••••••••••••••••••••••••••">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">AI Model</label>
+                <select class="form-select">
+                    <option>Llama 3.1 8B Instruct (Default)</option>
+                </select>
+            </div>
+            
+            <div class="button-group">
+                <button class="btn btn-primary">Generate Ideas</button>
+                <button class="btn btn-secondary">Clear</button>
+            </div>
+            
+            <div class="result-mockup">
+                <div class="result-header">💡 Ideas based on page content:</div>
+                <div class="result-content">1. **AI-Powered Content Optimization Platform**: Create a service that automatically analyzes webpage performance and suggests improvements using machine learning algorithms.
+
+2. **Smart Web Accessibility Tool**: Develop an extension that automatically detects and fixes accessibility issues on websites in real-time.
+
+3. **Automated A/B Testing Service**: Build a platform that runs continuous A/B tests on webpage elements to optimize conversion rates.</div>
+            </div>
+        </div>
+        
+        <!-- Features Grid -->
+        <div class="features-grid">
+            <div class="feature-card">
+                <span class="feature-icon">🤖</span>
+                <h3 class="feature-title">6 AI Models</h3>
+                <p class="feature-description">Choose from Llama, Mistral, Zephyr, and more. Each model offers unique creative approaches to idea generation.</p>
+            </div>
+            
+            <div class="feature-card">
+                <span class="feature-icon">⚡</span>
+                <h3 class="feature-title">Instant Results</h3>
+                <p class="feature-description">Generate innovative startup ideas in seconds. Works with selected text or entire webpage content.</p>
+            </div>
+            
+            <div class="feature-card">
+                <span class="feature-icon">🔒</span>
+                <h3 class="feature-title">Privacy First</h3>
+                <p class="feature-description">All data stored locally. Your API keys and preferences never leave your browser.</p>
+            </div>
+            
+            <div class="feature-card">
+                <span class="feature-icon">🎨</span>
+                <h3 class="feature-title">Beautiful UI</h3>
+                <p class="feature-description">Modern gradient design with smooth animations. Professional look that enhances your workflow.</p>
+            </div>
+        </div>
+        
+        <!-- Models Showcase -->
+        <div class="models-showcase">
+            <h2 class="models-title">Choose Your AI Model</h2>
+            <div class="models-grid">
+                <div class="model-card">
+                    <div class="model-name">Llama 3.1 8B Instruct</div>
+                    <div class="model-description">Balanced performance and creativity for general use</div>
+                </div>
+                <div class="model-card">
+                    <div class="model-name">Llama 3.2 3B Instruct</div>
+                    <div class="model-description">Fast responses with good efficiency</div>
+                </div>
+                <div class="model-card">
+                    <div class="model-name">Mistral 7B Instruct</div>
+                    <div class="model-description">Alternative reasoning style for unique perspectives</div>
+                </div>
+                <div class="model-card">
+                    <div class="model-name">Zephyr 7B Beta</div>
+                    <div class="model-description">Well-rounded performance for most use cases</div>
+                </div>
+                <div class="model-card">
+                    <div class="model-name">Phi-3 Mini 4K</div>
+                    <div class="model-description">Efficient and concise responses</div>
+                </div>
+                <div class="model-card">
+                    <div class="model-name">Qwen3 235B</div>
+                    <div class="model-description">High-performance option for complex analysis</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Instructions -->
+        <div class="instructions">
+            <h3>📸 Screenshot Instructions</h3>
+            <p>To create Chrome Web Store screenshots, take screenshots of this page at 1280x800 resolution. 
+            Focus on different sections for multiple screenshots. You can also crop the extension mockup 
+            for a close-up view of the interface.</p>
+        </div>
+    </div>
+</body>
+</html>

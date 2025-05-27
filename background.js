@@ -1,6 +1,13 @@
 // Background service worker
 chrome.runtime.onInstalled.addListener(() => {
   console.log('Startup Idea Generator extension installed');
+  
+  // Set default model if not set
+  chrome.storage.sync.get(['selectedModel'], function(result) {
+    if (!result.selectedModel) {
+      chrome.storage.sync.set({ selectedModel: 'meta-llama/Llama-3.1-8B-Instruct' });
+    }
+  });
 });
 
 // Handle API requests to HuggingFace

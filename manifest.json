@@ -1,14 +1,15 @@
 {
   "manifest_version": 3,
   "name": "Startup Idea Generator",
-  "version": "1.0",
-  "description": "Generate technology startup ideas from webpage text using HuggingFace AI",  "permissions": [
+  "version": "1.0.0",
+  "description": "Generate innovative technology startup ideas from any webpage content using advanced AI models from HuggingFace. Transform text into business opportunities instantly.",
+  "permissions": [
     "activeTab",
     "storage",
     "scripting"
-  ],
-  "host_permissions": [
-    "https://api-inference.huggingface.co/*"
+  ],  "host_permissions": [
+    "https://api-inference.huggingface.co/*",
+    "https://router.huggingface.co/*"
   ],
   "action": {
     "default_popup": "popup.html",
@@ -19,10 +20,11 @@
       "matches": ["<all_urls>"],
       "js": ["content.js"]
     }
-  ],
-  "background": {
+  ],  "background": {
     "service_worker": "background.js"
-  },  "icons": {
+  },
+  "author": "Jacek Nikitiuk",
+  "homepage_url": "https://github.com/jacol/Chrome-Startup-Ideas-Generator","icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png", 
     "128": "icons/icon128.png"
