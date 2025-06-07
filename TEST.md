@@ -21,7 +21,7 @@
      - Llama 3.1 8B Instruct (Default) - Well-balanced
      - Llama 3.2 3B Instruct (Faster) - Quicker responses
      - Mistral 7B Instruct v0.3 - Alternative reasoning style
-     - DialoGPT Large (Creative) - More conversational
+     - Qwen/Qwen3-235B-A22B (High Performance) - Massive model with state-of-the-art reasoning
      - Zephyr 7B Beta (Balanced) - Good all-around performance
      - Phi-3 Mini 4K Instruct (Efficient) - Fast and concise
    - Verify model selection persists across sessions
