@@ -26,12 +26,12 @@
      - Phi-3 Mini 4K Instruct (Efficient) - Fast and concise
    - Verify model selection persists across sessions
 
-3. **Selection Test:**
+4. **Selection Test:**
    - Select some text on a webpage
    - Click the extension icon and generate ideas
    - Should generate ideas based on selected text
 
-4. **Error Handling Test:**
+5. **Error Handling Test:**
    - Try on a Chrome internal page (chrome://extensions/)
    - Should show appropriate error message
    - Try with invalid API key
