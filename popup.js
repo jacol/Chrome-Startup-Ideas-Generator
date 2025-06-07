@@ -115,7 +115,8 @@ document.addEventListener('DOMContentLoaded', function() {  const apiKeyInput = 
         showStatus('Ideas generated successfully!', 'success');
       } else {
         throw new Error(response.error || 'Failed to generate ideas');
-      }    } catch (error) {
+      }
+    } catch (error) {
       console.error('Error:', error);
       
       // Provide more specific error messages
