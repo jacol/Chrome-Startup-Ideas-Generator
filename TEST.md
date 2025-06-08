@@ -21,17 +21,17 @@
      - Llama 3.1 8B Instruct (Default) - Well-balanced
      - Llama 3.2 3B Instruct (Faster) - Quicker responses
      - Mistral 7B Instruct v0.3 - Alternative reasoning style
-     - DialoGPT Large (Creative) - More conversational
+     - Qwen/Qwen3-235B-A22B (High Performance) - Massive model with state-of-the-art reasoning
      - Zephyr 7B Beta (Balanced) - Good all-around performance
      - Phi-3 Mini 4K Instruct (Efficient) - Fast and concise
    - Verify model selection persists across sessions
 
-3. **Selection Test:**
+4. **Selection Test:**
    - Select some text on a webpage
    - Click the extension icon and generate ideas
    - Should generate ideas based on selected text
 
-4. **Error Handling Test:**
+5. **Error Handling Test:**
    - Try on a Chrome internal page (chrome://extensions/)
    - Should show appropriate error message
    - Try with invalid API key
