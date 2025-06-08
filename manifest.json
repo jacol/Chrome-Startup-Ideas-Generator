@@ -1,14 +1,13 @@
 {  "manifest_version": 3,
   "name": "Startup Idea Generator",
   "version": "2.1.2",
-  "description": "Generate innovative startup ideas from webpage content using AI models from HuggingFace. Transform text into opportunities.",
+  "description": "Generate innovative startup ideas from webpage content using an AI service hosted on Azure. Transform web content into business opportunities.",
   "permissions": [
     "activeTab",
     "storage",
     "scripting"
   ],  "host_permissions": [
-    "https://api-inference.huggingface.co/*",
-    "https://router.huggingface.co/*"
+    "https://extbackend.azurewebsites.net/*"
   ],
   "action": {
     "default_popup": "popup.html",

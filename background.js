@@ -1,31 +1,37 @@
 // Background service worker
 chrome.runtime.onInstalled.addListener(() => {
   console.log('Startup Idea Generator extension installed');
-  
-  // Set default model if not set
-  chrome.storage.sync.get(['selectedModel'], function(result) {
-    if (!result.selectedModel) {
-      chrome.storage.sync.set({ selectedModel: 'meta-llama/Llama-3.1-8B-Instruct' });
-    }
-  });
 });
 
-// Handle API requests to HuggingFace
+// Handle API requests to Azure server
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === 'generateIdeas') {
-    generateStartupIdeas(request.text, request.apiKey, request.model)
-      .then(result => sendResponse({ success: true, data: result }))
-      .catch(error => sendResponse({ success: false, error: error.message }));
+    console.log('Received generateIdeas request with content length:', request.content?.length || 0);
+    
+    if (!request.content) {
+      sendResponse({ success: false, error: 'No content provided' });
+      return true;
+    }
+    
+    generateStartupIdeas(request.content)
+      .then(result => {
+        console.log('Successfully generated ideas:', result);
+        sendResponse({ success: true, data: result });
+      })
+      .catch(error => {
+        console.error('Error in generateStartupIdeas:', error);
+        sendResponse({ success: false, error: error.message || 'Unknown error occurred' });
+      });
     
     // Return true to indicate we'll send a response asynchronously
     return true;
   }
 });
 
-async function generateStartupIdeas(inputText, apiKey, model = 'meta-llama/Llama-3.1-8B-Instruct') {
+async function generateStartupIdeas(content) {
   try {
-    console.log(`Generating ideas with ${model}`);
-    const result = await callHuggingFaceAPI(inputText, apiKey, model);
+    console.log('Generating ideas with Azure API');
+    const result = await callLocalAPI(content);
     console.log('Successfully generated startup ideas');
     return result;
   } catch (error) {
@@ -34,158 +40,54 @@ async function generateStartupIdeas(inputText, apiKey, model = 'meta-llama/Llama
   }
 }
 
-async function callHuggingFaceAPI(inputText, apiKey, model) {
-  // Check if model supports chat completions format
-  const chatModels = [
-    'meta-llama/Llama-3.1-8B-Instruct',
-    'meta-llama/Llama-3.2-3B-Instruct',
-    'mistralai/Mistral-7B-Instruct-v0.3',
-    'HuggingFaceH4/zephyr-7b-beta',
-    'microsoft/Phi-3-mini-4k-instruct',
-    'Qwen/Qwen3-235B-A22B'
-  ];
+async function callLocalAPI(content) {
+  const API_URL = 'https://extbackend.azurewebsites.net/generate-startup-ideas';
   
-  const useChatFormat = chatModels.includes(model);
+  console.log('Calling Azure API with content length:', content?.length || 0);
   
-  if (useChatFormat) {
-    return await callChatCompletionAPI(inputText, apiKey, model);
-  } else {
-    return await callTextGenerationAPI(inputText, apiKey, model);
-  }
-}
+  try {
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        content: content
+      })
+    });
 
-async function callChatCompletionAPI(inputText, apiKey, model) {
-  const API_URL = `https://router.huggingface.co/hf-inference/models/${model}/v1/chat/completions`;
-  
-  const response = await fetch(API_URL, {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${apiKey}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      messages: [
-        {
-          role: "user",
-          content: `Based on this text, generate 3 innovative technology startup ideas that solve real problems:
+    console.log('Azure API response status:', response.status);
 
-Context: ${inputText.substring(0, 600)}
-
-Please provide 3 concrete startup ideas with brief descriptions:`
-        }
-      ],
-      model: model,
-      stream: false,
-      temperature: 0.8,
-      top_p: 0.9
-    })
-  });
-
-  if (!response.ok) {
-    const errorText = await response.text();
-    console.error(`API Error for ${model}:`, errorText);
-    
-    if (response.status === 401) {
-      throw new Error('Invalid API key. Please check your HuggingFace token.');
-    } else if (response.status === 404) {
-      throw new Error(`${model} model not found or unavailable.`);
-    } else if (response.status === 429) {
-      throw new Error('Rate limit exceeded. Please wait a moment and try again.');
-    } else if (response.status === 503) {
-      throw new Error(`${model} model is currently loading. Please try again in a moment.`);
-    } else {
-      throw new Error(`API request failed: ${response.status} - ${errorText || response.statusText}`);
-    }
-  }
-
-  const result = await response.json();
-  
-  if (result.error) {
-    throw new Error(result.error);
-  }
-
-  // Extract the generated text from chat completion format
-  let generatedText = '';
-  if (result.choices && result.choices[0] && result.choices[0].message) {
-    generatedText = result.choices[0].message.content || result.choices[0].message.text || '';
-  } else {
-    throw new Error('Unexpected response format from API - no choices or message found');
-  }
-
-  return processGeneratedText(generatedText);
-}
-
-async function callTextGenerationAPI(inputText, apiKey, model) {
-  const API_URL = `https://api-inference.huggingface.co/models/${model}`;
-  
-  const prompt = `Based on this text, generate 3 innovative technology startup ideas that solve real problems:
-
-Context: ${inputText.substring(0, 600)}
-
-Startup Ideas:
-1.`;
-
-  const response = await fetch(API_URL, {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${apiKey}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      inputs: prompt,
-      parameters: {
-        max_length: 400,
-        temperature: 0.8,
-        top_p: 0.9,
-        do_sample: true,
-        return_full_text: false
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Azure API Error:', errorText);
+      
+      if (response.status === 404) {
+        throw new Error('API server endpoint not found. Please check if the service is available at extbackend.azurewebsites.net');
+      } else if (response.status === 500) {
+        throw new Error('API server error. Please check the server logs.');
+      } else {
+        throw new Error(`API request failed: ${response.status} - ${errorText || response.statusText}`);
       }
-    })
-  });
-
-  if (!response.ok) {
-    const errorText = await response.text();
-    console.error(`API Error for ${model}:`, errorText);
-    
-    if (response.status === 401) {
-      throw new Error('Invalid API key. Please check your HuggingFace token.');
-    } else if (response.status === 404) {
-      throw new Error(`${model} model not found or unavailable.`);
-    } else if (response.status === 429) {
-      throw new Error('Rate limit exceeded. Please wait a moment and try again.');
-    } else if (response.status === 503) {
-      throw new Error(`${model} model is currently loading. Please try again in a moment.`);
-    } else {
-      throw new Error(`API request failed: ${response.status} - ${errorText || response.statusText}`);
     }
-  }
 
-  const result = await response.json();
-  
-  if (result.error) {
-    throw new Error(result.error);
-  }
+    const result = await response.json();
+    console.log('Azure API response:', result);
+    
+    if (result.error) {
+      throw new Error(result.error);
+    }
 
-  // Extract generated text from text generation format
-  let generatedText = '';
-  if (Array.isArray(result) && result[0] && result[0].generated_text) {
-    generatedText = result[0].generated_text;
-  } else {
-    throw new Error('Unexpected response format from API');
+    // Return the generated ideas directly from the Azure API
+    const ideas = result.ideas || result.response || result.data || result.content || 'No ideas generated';
+    console.log('Extracted ideas:', ideas);
+    
+    return ideas;
+  } catch (error) {
+    console.error('Error in callLocalAPI:', error);
+    throw error;
   }
-
-  return processGeneratedText('1.' + generatedText);
 }
 
-function processGeneratedText(generatedText) {
-  // Clean up the response
-  let cleanedText = generatedText.trim();
-  
-  // If the text is too short or doesn't look like ideas, enhance it
-  if (cleanedText.length < 50) {
-    cleanedText = `1. ${cleanedText}\n\n2. Create a platform to solve similar problems in this domain\n\n3. Develop an AI tool to automate processes mentioned in the context`;
-  }
-  
-  return cleanedText || 'Unable to generate specific ideas from the provided text. Consider trying with different content or check your API connection.';
-}
+
 

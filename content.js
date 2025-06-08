@@ -3,55 +3,29 @@
   'use strict';
   
   console.log('Startup Ideas content script loaded');
-  
-  // Function to get selected text or full page text
+    // Function to get selected text or full page HTML content
   function getTextContent() {
     try {
       const selection = window.getSelection().toString().trim();
       
       if (selection) {
+        // Return selected text wrapped in basic HTML structure
         return {
-          text: selection,
+          text: `<html><body><div>${selection}</div></body></html>`,
           source: 'selected'
         };
       }
       
-      // If no selection, get meaningful text from the page
-      // Clone the body to avoid modifying the actual page
-      const bodyClone = document.body.cloneNode(true);
-      
-      // Remove script and style elements from the clone
-      const unwantedElements = bodyClone.querySelectorAll('script, style, nav, header, footer, aside, .nav, .header, .footer, .sidebar, .menu');
-      unwantedElements.forEach(element => element.remove());
-      
-      // Get main content areas
-      const mainContent = bodyClone.querySelector('main, article, .content, #content, .post, .article, [role="main"]') || bodyClone;
-      
-      let text = '';
-      if (mainContent) {
-        // Get text content and clean it up
-        text = mainContent.innerText || mainContent.textContent || '';
-        
-        // Clean up the text
-        text = text
-          .replace(/\s+/g, ' ') // Replace multiple whitespace with single space
-          .replace(/\n\s*\n/g, '\n') // Remove empty lines
-          .trim();
-        
-        // Limit text length to avoid API limits (keep first 2000 characters)
-        if (text.length > 2000) {
-          text = text.substring(0, 2000) + '...';
-        }
-      }
+      // If no selection, get the full HTML content
+      const htmlContent = document.documentElement.outerHTML;
       
       return {
-        text: text || 'No meaningful text found on this page.',
+        text: htmlContent,
         source: 'page'
       };
-    } catch (error) {
-      console.error('Error extracting text content:', error);
+    } catch (error) {      console.error('Error extracting content:', error);
       return {
-        text: 'Error extracting text from this page.',
+        text: '<html><body><div>Error extracting content from this page.</div></body></html>',
         source: 'error'
       };
     }
@@ -65,10 +39,9 @@
         const content = getTextContent();
         console.log('Sending content:', content);
         sendResponse(content);
-      } catch (error) {
-        console.error('Error in getTextContent:', error);
+      } catch (error) {        console.error('Error in getTextContent:', error);
         sendResponse({
-          text: 'Error extracting content from this page.',
+          text: '<html><body><div>Error extracting content from this page.</div></body></html>',
           source: 'error'
         });
       }

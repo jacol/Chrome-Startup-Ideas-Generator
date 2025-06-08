@@ -1,6 +1,5 @@
 // Popup script
-document.addEventListener('DOMContentLoaded', function() {  const apiKeyInput = document.getElementById('apiKey');
-  const modelSelect = document.getElementById('modelSelect');
+document.addEventListener('DOMContentLoaded', function() {
   const generateBtn = document.getElementById('generateBtn');
   const clearBtn = document.getElementById('clearBtn');
   const copyBtn = document.getElementById('copyBtn');
@@ -10,45 +9,14 @@ document.addEventListener('DOMContentLoaded', function() {  const apiKeyInput = 
   const resultHeaderDiv = document.querySelector('.result-header');
   const resultContentDiv = document.querySelector('.result-content');
   
-  let currentGeneratedText = '';
-  // Load saved API key and model
-  chrome.storage.sync.get(['huggingfaceApiKey', 'selectedModel'], function(result) {
-    if (result.huggingfaceApiKey) {
-      apiKeyInput.value = result.huggingfaceApiKey;
-    }
-    if (result.selectedModel) {
-      modelSelect.value = result.selectedModel;
-    }
-  });
-  // Save API key when it changes
-  apiKeyInput.addEventListener('input', function() {
-    const apiKey = apiKeyInput.value.trim();
-    if (apiKey) {
-      chrome.storage.sync.set({ huggingfaceApiKey: apiKey });
-    }
-  });
-
-  // Save model selection when it changes
-  modelSelect.addEventListener('change', function() {
-    const selectedModel = modelSelect.value;
-    chrome.storage.sync.set({ selectedModel: selectedModel });
-  });
-  // Generate button click handler
+  let currentGeneratedText = '';  // Generate button click handler
   generateBtn.addEventListener('click', async function() {
-    const apiKey = apiKeyInput.value.trim();
-    const selectedModel = modelSelect.value;
-    
-    if (!apiKey) {
-      showStatus('Please enter your HuggingFace API key', 'error');
-      return;
-    }
-
     try {
       // Disable button and show loading
       generateBtn.disabled = true;
       generateBtn.textContent = 'Generating...';
-      showStatus('Getting text from webpage...', 'loading');
-      hideResult();      // Get active tab
+      showStatus('Getting content from webpage...', 'loading');
+      hideResult();// Get active tab
       const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
       
       // Check if the tab is a valid webpage (not chrome:// or extension pages)
@@ -74,16 +42,14 @@ document.addEventListener('DOMContentLoaded', function() {  const apiKeyInput = 
             // Last resort: try to execute a simple script to get page content
             try {
               const results = await chrome.scripting.executeScript({
-                target: { tabId: tab.id },
-                func: () => {
+                target: { tabId: tab.id },                func: () => {
                   const selection = window.getSelection().toString().trim();
                   if (selection) {
-                    return { text: selection, source: 'selected' };
+                    return { text: `<html><body><div>${selection}</div></body></html>`, source: 'selected' };
                   }
-                  const bodyText = document.body.innerText || document.body.textContent || '';
-                  const cleanText = bodyText.replace(/\s+/g, ' ').trim().substring(0, 2000);
+                  const htmlContent = document.documentElement.outerHTML;
                   return { 
-                    text: cleanText || 'No text content found', 
+                    text: htmlContent || '<html><body><div>No content found</div></body></html>', 
                     source: 'page' 
                   };
                 }
@@ -96,38 +62,37 @@ document.addEventListener('DOMContentLoaded', function() {  const apiKeyInput = 
         } else {
           throw error;
         }
-      }
-      
-      if (!textContent || !textContent.text) {
-        throw new Error('No text found on the page');
+      }      if (!textContent || !textContent.text) {
+        throw new Error('No content found on the page');
       }
 
-      showStatus(`Generating startup ideas from ${textContent.source} text...`, 'loading');      // Generate startup ideas
-      const response = await chrome.runtime.sendMessage({
-        action: 'generateIdeas',
-        text: textContent.text,
-        apiKey: apiKey,
-        model: selectedModel
+      console.log('Extracted content:', { 
+        source: textContent.source, 
+        length: textContent.text?.length || 0,
+        preview: textContent.text?.substring(0, 100) || 'no preview'
       });
 
-      if (response.success) {
+      showStatus('Generating startup ideas from ' + textContent.source + ' content...', 'loading');// Generate startup ideas using Azure API
+      const response = await chrome.runtime.sendMessage({
+        action: 'generateIdeas',
+        content: textContent.text
+      });
+
+      console.log('Response from background:', response);
+
+      if (response && response.success) {
         showResult(response.data, textContent.source);
         showStatus('Ideas generated successfully!', 'success');
       } else {
-        throw new Error(response.error || 'Failed to generate ideas');
-      }    } catch (error) {
+        throw new Error(response?.error || 'Failed to generate ideas - no response received');
+      }} catch (error) {
       console.error('Error:', error);
-      
-      // Provide more specific error messages
+        // Provide more specific error messages
       let errorMessage = error.message;
-      if (errorMessage.includes('404')) {
-        errorMessage = 'AI model temporarily unavailable. Please try again in a few moments.';
-      } else if (errorMessage.includes('401')) {
-        errorMessage = 'Invalid API key. Please check your HuggingFace token at huggingface.co/settings/tokens';
-      } else if (errorMessage.includes('429')) {
-        errorMessage = 'Rate limit exceeded. Please wait a moment before trying again.';
-      } else if (errorMessage.includes('503')) {
-        errorMessage = 'AI model is loading. Please wait a moment and try again.';
+      if (errorMessage.includes('API server endpoint not found')) {
+        errorMessage = 'API server endpoint not found. Please check if the service is available at extbackend.azurewebsites.net';
+      } else if (errorMessage.includes('server error')) {
+        errorMessage = 'API server error. Please check the server status and try again.';
       }
       
       showStatus(`Error: ${errorMessage}`, 'error');
@@ -152,15 +117,15 @@ document.addEventListener('DOMContentLoaded', function() {  const apiKeyInput = 
   function hideStatus() {
     statusDiv.classList.add('hidden');
   }  function showResult(text, source) {
-    const sourceText = source === 'selected' ? 'selected text' : 'page content';
-    resultHeaderDiv.innerHTML = `💡 Ideas based on ${sourceText}:`;
+    const sourceText = source === 'selected' ? 'selected content' : 'webpage content';
+    resultHeaderDiv.innerHTML = `💡 Startup ideas based on ${sourceText}:`;
     resultContentDiv.textContent = text;
     resultDiv.classList.remove('hidden');
     
     // Store the generated text and show copy button
     currentGeneratedText = text;
     copyButtonContainer.classList.remove('hidden');
-  }  function hideResult() {
+  }function hideResult() {
     resultDiv.classList.add('hidden');
     copyButtonContainer.classList.add('hidden');
     resultHeaderDiv.innerHTML = '';
