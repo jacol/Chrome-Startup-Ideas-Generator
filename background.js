@@ -73,15 +73,31 @@ async function callLocalAPI(content) {
 
     const result = await response.json();
     console.log('Azure API response:', result);
+    console.log('Result keys:', Object.keys(result));
+    console.log('Result type:', typeof result);
+    console.log('Full result object:', JSON.stringify(result, null, 2));
     
     if (result.error) {
       throw new Error(result.error);
     }
 
     // Return the generated ideas directly from the Azure API
-    const ideas = result.ideas || result.response || result.data || result.content || 'No ideas generated';
+    let ideas = result.startup_ideas || result.ideas || result.response || result.data || result.content || result;
     console.log('Extracted ideas:', ideas);
+    console.log('Ideas type:', typeof ideas);
     
+    // If ideas is an object, try to convert it to a readable format
+    if (typeof ideas === 'object' && ideas !== null) {
+      // If it's an array, join with newlines
+      if (Array.isArray(ideas)) {
+        ideas = ideas.join('\n\n');
+      } else {
+        // If it's an object, convert to JSON string or extract text content
+        ideas = JSON.stringify(ideas, null, 2);
+      }
+    }
+    
+    console.log('Final ideas to return:', ideas);
     return ideas;
   } catch (error) {
     console.error('Error in callLocalAPI:', error);
