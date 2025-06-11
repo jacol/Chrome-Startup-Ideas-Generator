@@ -255,37 +255,27 @@
         }
     </style>
 </head>
-<body>
-    <div class="hero-section">
+<body>    <div class="hero-section">
         <h1 class="hero-title">🚀 Startup Idea Generator</h1>
-        <p class="hero-subtitle">Transform any webpage into innovative business opportunities with AI</p>
+        <p class="hero-subtitle">Transform any webpage into innovative business opportunities with Azure AI</p>
         
         <!-- Extension Mockup -->
-        <div class="extension-mockup">
-            <div class="extension-header">
+        <div class="extension-mockup">            <div class="extension-header">
                 <div class="extension-logo">🚀</div>
                 <h2 class="extension-title">Startup Ideas</h2>
-                <div class="extension-subtitle">AI-powered idea generation</div>
+                <div class="extension-subtitle">Azure AI-powered idea generation</div>
             </div>
             
             <div class="form-group">
-                <label class="form-label">HuggingFace API Key</label>
-                <input type="password" class="form-input" placeholder="hf_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" value="••••••••••••••••••••••••••••••••••••••••">
+                <div class="help-text" style="color: rgba(255, 255, 255, 0.85); background: rgba(255, 255, 255, 0.1); padding: 12px 16px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px); margin-bottom: 20px; font-size: 13px; line-height: 1.5;">
+                    This extension extracts content from the current webpage (or selected text) and sends it to an AI service to generate startup ideas. The service is hosted at extbackend.azurewebsites.net
+                </div>
             </div>
-            
-            <div class="form-group">
-                <label class="form-label">AI Model</label>
-                <select class="form-select">
-                    <option>Llama 3.1 8B Instruct (Default)</option>
-                </select>
+              <div class="button-group">
+                <button class="btn btn-primary">🎯 Generate Ideas</button>
+                <button class="btn btn-secondary">🗑️ Clear</button>
             </div>
-            
-            <div class="button-group">
-                <button class="btn btn-primary">Generate Ideas</button>
-                <button class="btn btn-secondary">Clear</button>
-            </div>
-            
-            <div class="result-mockup">
+              <div class="result-mockup">
                 <div class="result-header">💡 Ideas based on page content:</div>
                 <div class="result-content">1. **AI-Powered Content Optimization Platform**: Create a service that automatically analyzes webpage performance and suggests improvements using machine learning algorithms.
 
@@ -293,14 +283,20 @@
 
 3. **Automated A/B Testing Service**: Build a platform that runs continuous A/B tests on webpage elements to optimize conversion rates.</div>
             </div>
+            
+            <div class="button-group" style="margin-top: 16px;">
+                <button class="btn" style="background: rgba(255, 255, 255, 0.15); color: white; border: 1px solid rgba(255, 255, 255, 0.3);">
+                    <span style="margin-right: 8px;">📋</span>
+                    Copy Ideas
+                </button>
+            </div>
         </div>
-        
-        <!-- Features Grid -->
+          <!-- Features Grid -->
         <div class="features-grid">
             <div class="feature-card">
                 <span class="feature-icon">🤖</span>
-                <h3 class="feature-title">6 AI Models</h3>
-                <p class="feature-description">Choose from Llama, Mistral, Zephyr, and more. Each model offers unique creative approaches to idea generation.</p>
+                <h3 class="feature-title">Azure AI Powered</h3>
+                <p class="feature-description">Leverages Azure's advanced AI models for intelligent startup idea generation with enterprise-grade reliability.</p>
             </div>
             
             <div class="feature-card">
@@ -311,44 +307,54 @@
             
             <div class="feature-card">
                 <span class="feature-icon">🔒</span>
-                <h3 class="feature-title">Privacy First</h3>
-                <p class="feature-description">All data stored locally. Your API keys and preferences never leave your browser.</p>
+                <h3 class="feature-title">Secure & Simple</h3>
+                <p class="feature-description">No API keys required. Secure cloud processing with no data stored permanently on external servers.</p>
             </div>
-            
-            <div class="feature-card">
+              <div class="feature-card">
                 <span class="feature-icon">🎨</span>
                 <h3 class="feature-title">Beautiful UI</h3>
                 <p class="feature-description">Modern gradient design with smooth animations. Professional look that enhances your workflow.</p>
             </div>
+            
+            <div class="feature-card">
+                <span class="feature-icon">🌐</span>
+                <h3 class="feature-title">Universal Compatibility</h3>
+                <p class="feature-description">Works on any website. Analyze news articles, product pages, research papers, or any web content.</p>
+            </div>
+              <div class="feature-card">
+                <span class="feature-icon">📋</span>
+                <h3 class="feature-title">Easy Sharing</h3>
+                <p class="feature-description">One-click copy functionality. Share your generated ideas instantly with team members or save for later.</p>
+            </div>
         </div>
         
-        <!-- Models Showcase -->
+        <!-- Use Cases Section -->
         <div class="models-showcase">
-            <h2 class="models-title">Choose Your AI Model</h2>
+            <h2 class="models-title">Perfect For Every Entrepreneur</h2>
             <div class="models-grid">
                 <div class="model-card">
-                    <div class="model-name">Llama 3.1 8B Instruct</div>
-                    <div class="model-description">Balanced performance and creativity for general use</div>
+                    <div class="model-name">📰 News Articles</div>
+                    <div class="model-description">Turn trending news into startup opportunities</div>
                 </div>
                 <div class="model-card">
-                    <div class="model-name">Llama 3.2 3B Instruct</div>
-                    <div class="model-description">Fast responses with good efficiency</div>
+                    <div class="model-name">🔬 Research Papers</div>
+                    <div class="model-description">Extract business ideas from academic research</div>
                 </div>
                 <div class="model-card">
-                    <div class="model-name">Mistral 7B Instruct</div>
-                    <div class="model-description">Alternative reasoning style for unique perspectives</div>
+                    <div class="model-name">🛍️ E-commerce Sites</div>
+                    <div class="model-description">Identify market gaps and improvement opportunities</div>
                 </div>
                 <div class="model-card">
-                    <div class="model-name">Zephyr 7B Beta</div>
-                    <div class="model-description">Well-rounded performance for most use cases</div>
+                    <div class="model-name">💼 Company Websites</div>
+                    <div class="model-description">Analyze competitors and find new niches</div>
                 </div>
                 <div class="model-card">
-                    <div class="model-name">Phi-3 Mini 4K</div>
-                    <div class="model-description">Efficient and concise responses</div>
+                    <div class="model-name">📊 Industry Reports</div>
+                    <div class="model-description">Transform data insights into actionable ideas</div>
                 </div>
                 <div class="model-card">
-                    <div class="model-name">Qwen3 235B</div>
-                    <div class="model-description">High-performance option for complex analysis</div>
+                    <div class="model-name">🌐 Any Website</div>
+                    <div class="model-description">Universal compatibility with all web content</div>
                 </div>
             </div>
         </div>
@@ -357,7 +363,8 @@
         <div class="instructions">
             <h3>📸 Screenshot Instructions</h3>
             <p>To create Chrome Web Store screenshots, take screenshots of this page at 1280x800 resolution. 
-            Focus on different sections for multiple screenshots. You can also crop the extension mockup 
+            Focus on different sections for multiple screenshots. The extension mockup shows the current Azure AI-powered 
+            interface with simplified setup - no API keys required. You can also crop the extension mockup 
             for a close-up view of the interface.</p>
         </div>
     </div>
