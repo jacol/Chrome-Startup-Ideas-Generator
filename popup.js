@@ -125,12 +125,18 @@ document.addEventListener('DOMContentLoaded', function() {
     // Store the generated text and show copy button
     currentGeneratedText = text;
     copyButtonContainer.classList.remove('hidden');
+    
+    // Show the Clear button after generating ideas
+    clearBtn.classList.remove('hidden');
   }function hideResult() {
     resultDiv.classList.add('hidden');
     copyButtonContainer.classList.add('hidden');
     resultHeaderDiv.innerHTML = '';
     resultContentDiv.textContent = '';
     currentGeneratedText = '';
+    
+    // Hide the Clear button when clearing results
+    clearBtn.classList.add('hidden');
   }
   
   // Copy button click handler

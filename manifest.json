@@ -1,6 +1,6 @@
 {  "manifest_version": 3,
   "name": "Startup Idea Generator",
-  "version": "2.1.2",
+  "version": "2.1.5",
   "description": "Generate innovative startup ideas from webpage content using an AI service hosted on Azure. Transform web content into business opportunities.",
   "permissions": [
     "activeTab",
