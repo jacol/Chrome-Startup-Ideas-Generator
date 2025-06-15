@@ -1,12 +1,10 @@
 {  "manifest_version": 3,
   "name": "Startup Idea Generator",
-  "version": "2.1.5",
-  "description": "Generate innovative startup ideas from webpage content using AI. Transform web content into business opportunities.",
-  "permissions": [
+  "version": "2.1.6",
+  "description": "Generate innovative startup ideas from webpage content using AI. Transform web content into business opportunities.",  "permissions": [
     "activeTab",
-    "storage",
     "scripting"
-  ],  "host_permissions": [
+  ],"host_permissions": [
     "https://extbackend.azurewebsites.net/*"
   ],
   "action": {
